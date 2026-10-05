@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using Microsoft.Extensions.Configuration;
 using MiAppTerminal1.Domain;
 using MiAppTerminal1.Interfaces;
 
@@ -10,8 +11,15 @@ namespace MiAppTerminal1.Infrastructure;
 
 public class JsonTareaRepository : ITareaRepository
 {
-    private readonly string _rutaArchivo = "tareas.json";
+    private readonly string _rutaArchivo;
 
+    // El Host inyectará automáticamente el motor de configuración a través del constructor
+    public JsonTareaRepository(IConfiguration configuration)
+    {
+        // Leemos la jerarquía definida en el appsettings.json (Separada por dos puntos ':')
+        _rutaArchivo = configuration["ConfiguracionTareas:RutaArchivo"] 
+                       ?? "tareas_por_defecto.json"; // Valor de respaldo por si no se encuentra
+    }
     public void Guardar(Tarea tarea)
     {
         var tareas = ObtenerTodas().ToList();
