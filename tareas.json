@@ -1,0 +1,17 @@
+[
+  {
+    "Id": 1,
+    "Descripcion": "Realizar pruebas de c#",
+    "ECompletado": false
+  },
+  {
+    "Id": 2,
+    "Descripcion": "Gestionar permiso de instalacion ",
+    "ECompletado": false
+  },
+  {
+    "Id": 3,
+    "Descripcion": "Agregar Pipeline",
+    "ECompletado": false
+  }
+]

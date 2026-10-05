@@ -1,16 +1,15 @@
-using System;
 using MiAppTerminal1.Domain;
-using MiAppTerminal1.interfaces; // 1. Corregido a mayúscula para coincidir con tu carpeta
+using MiAppTerminal1.Interfaces;
 
 namespace MiAppTerminal1.Services; // 2. Corregido a plural para alinearse con las buenas prácticas
 
 public class TareaService
 {
     // 3. Corregido el contrato a ITareaRepository (con T mayúscula)
-    private readonly ItareaRepository _repository;
+    private readonly ITareaRepository _repository;
 
     // Aquí hacemos la inyección del contrato
-    public TareaService(ItareaRepository repository)
+    public TareaService(ITareaRepository repository)
     {
         _repository = repository;
     }
