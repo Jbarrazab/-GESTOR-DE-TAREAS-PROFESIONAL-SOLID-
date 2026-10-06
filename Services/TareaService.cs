@@ -1,29 +1,26 @@
 using MiAppTerminal1.Domain;
+using System.Collections.Generic;
 using MiAppTerminal1.Interfaces;
-using Microsoft.VisualBasic;
 
-namespace MiAppTerminal1.Services; // 2. Corregido a plural para alinearse con las buenas prácticas
+namespace MiAppTerminal1.Services; // 
 
 public class TareaService
 {
-    // 3. Corregido el contrato a ITareaRepository (con T mayúscula)
+    
     private readonly ITareaRepository _repository;
 
-    // Aquí hacemos la inyección del contrato
+    // inyección del contrato
     public TareaService(ITareaRepository repository)
     {
         _repository = repository;
     }
 
-    public void CrearTarea(string descripcion)
+    public void CrearTarea(string tituloRaw, string descripcion, string nombreResponsable, string apellidoResponsable)
     {
-        // Validar que no se inserten espacios en blanco
-        if (string.IsNullOrWhiteSpace(descripcion))
-        {
-            throw new ArgumentException("La descripción de la tarea no puede estar vacía.");   
-        }
+        var titulo = new TituloTarea(tituloRaw);
+        var responsable = new Persona(nombreResponsable, apellidoResponsable);
 
-        var nuevaTarea = new Tarea(0, descripcion);
+        var nuevaTarea = new Tarea(0, titulo, descripcion, responsable);
         _repository.Guardar(nuevaTarea);
     }
 

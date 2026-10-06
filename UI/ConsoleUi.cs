@@ -33,19 +33,37 @@ public class ConsoleUi
 
             switch (opcion)
             {
-                case "1":
-                    Console.Write("\nEscribe la descripción de la tarea: ");
-                    string? desc = Console.ReadLine();
+case "1":
+                    Console.WriteLine("\n--- CREAR NUEVA TAREA (ARQUITECTURA AVANZADA) ---");
+                    
+                    Console.Write("Título de la tarea: ");
+                    string? tInput = Console.ReadLine();
+                    
+                    Console.Write("Descripción breve: ");
+                    string? dInput = Console.ReadLine();
+                    
+                    Console.Write("Nombre del Responsable: ");
+                    string? nomInput = Console.ReadLine();
+                    
+                    Console.Write("Apellido del Responsable: ");
+                    string? apeInput = Console.ReadLine();
+                    
                     try
                     {
-                        _servicio.CrearTarea(desc ?? string.Empty);
+                        _servicio.CrearTarea(
+                            tInput ?? string.Empty, 
+                            dInput ?? string.Empty, 
+                            nomInput ?? string.Empty, 
+                            apeInput ?? string.Empty
+                        );
+                        
                         Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("¡Tarea agregada con éxito!");
+                        Console.WriteLine("¡Tarea estructurada y agregada con éxito!");
                     }
                     catch (ArgumentException ex)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"Error de validación: {ex.Message}");
+                        Console.WriteLine($"Error de Negocio/Validación: {ex.Message}");
                     }
                     finally { Console.ResetColor(); }
                     break;
@@ -62,8 +80,14 @@ public class ConsoleUi
                         foreach (var t in tareas)
                         {
                             string estado = t.ECompletado ? "[X] Completada" : "[ ] Pendiente";
-                            Console.WriteLine($"{t.Id}. {t.Descripcion} - {estado}");
+                            
+                            Console.WriteLine("-------------------------------------------------");
+                            Console.WriteLine($"ID: {t.Id} {estado}");
+                            Console.WriteLine($"Título: {t.Titulo?.Valor ?? "Sin Título"}"); 
+                            Console.WriteLine($"Descripción: {t.Descripcion ?? "Sin Descripción"}");
+                            Console.WriteLine($"Responsable: {t.Responsable?.NombreVisual ?? "No Asignado"} (ID: {t.Responsable?.Identificador ?? "N/A"})");
                         }
+                        Console.WriteLine("-------------------------------------------------");
                     }
                     break;
 

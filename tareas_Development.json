@@ -1,23 +1,60 @@
 [
   {
     "Id": 1,
+    "Titulo": null,
     "Descripcion": "google 23",
+    "Responsable": null,
     "ECompletado": false
   },
   {
     "Id": 3,
+    "Titulo": null,
     "Descripcion": "Tarea en produccion test",
+    "Responsable": null,
     "ECompletado": false
   },
   {
     "Id": 4,
+    "Titulo": null,
     "Descripcion": "**************",
+    "Responsable": null,
     "ECompletado": false
   },
   {
     "Id": 5,
+    "Titulo": null,
     "Descripcion": "#############",
+    "Responsable": null,
+    "ECompletado": false
+  },
+  {
+    "Id": 6,
+    "Titulo": {
+      "Valor": "Pruebas unitarias"
+    },
+    "Descripcion": "Estudiar pruebas y hacer casos practicos",
+    "Responsable": {
+      "$type": "persona",
+      "Nombre": "Jafit",
+      "Apellido": "Barraza",
+      "Identificador": "barraza_jafit",
+      "NombreVisual": "Jafit Barraza"
+    },
+    "ECompletado": false
+  },
+  {
+    "Id": 7,
+    "Titulo": {
+      "Valor": "Pruebas1"
+    },
+    "Descripcion": "pruebas ejemplo 1",
+    "Responsable": {
+      "$type": "persona",
+      "Nombre": "jafit",
+      "Apellido": "barraza",
+      "Identificador": "barraza_jafit",
+      "NombreVisual": "jafit barraza"
+    },
     "ECompletado": false
   }
 ]
-
