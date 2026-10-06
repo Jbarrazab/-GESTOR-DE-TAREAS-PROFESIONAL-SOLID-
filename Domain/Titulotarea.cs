@@ -13,7 +13,7 @@ public class TituloTarea
             throw new ArgumentException("El título de la tarea no puede estar vacío.");
         }
 
-        if (valor.Length < 3 || valor.Length > 100)
+        if (valor.Length < 3 || valor.Length > 80)
         {
             throw new ArgumentException("El título debe tener entre 3 y 100 caracteres por restricciones de negocio.");
         }
