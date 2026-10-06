@@ -6,6 +6,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using MiAppTerminal1.Domain;
 using MiAppTerminal1.Interfaces;
+using MiAppTerminal1.Infrastructure.Dtos;
 
 namespace MiAppTerminal1.Infrastructure;
 
@@ -13,62 +14,57 @@ public class JsonTareaRepository : ITareaRepository
 {
     private readonly string _rutaArchivo;
 
-    // El Host inyectará automáticamente el motor de configuración a través del constructor
     public JsonTareaRepository(IConfiguration configuration)
     {
-        // Leemos la jerarquía definida en el appsettings.json (Separada por dos puntos ':')
-        _rutaArchivo = configuration["ConfiguracionTareas:RutaArchivo"] 
-                       ?? "tareas_por_defecto.json"; // Valor de respaldo por si no se encuentra
+        _rutaArchivo = configuration["ConfiguracionTareas:RutaArchivo"] ?? "tareas.json";
     }
+
     public void Guardar(Tarea tarea)
     {
-        var tareas = ObtenerTodas().ToList();
-        int idActual = tareas.Any() ? tareas.Max(t => t.Id) + 1 : 1;
-        tarea.Id = idActual;
+        var dtos = LeerDtosDesdeDisco();
+        int nuevoId = dtos.Any() ? dtos.Max(d => d.Id) + 1 : 1;
+        tarea.Id = nuevoId;
+
+        // Transformación: Dominio -> DTO
+        var nuevoDto = MapearADto(tarea);
+        dtos.Add(nuevoDto);
         
-        tareas.Add(tarea);
-        GuardarTodo(tareas);
+        GuardarDtosEnDisco(dtos);
     }
 
     public IEnumerable<Tarea> ObtenerTodas()
     {
-        if (!File.Exists(_rutaArchivo)) return new List<Tarea>();
-
-        try
-        {
-            string jsonString = File.ReadAllText(_rutaArchivo);
-            return JsonSerializer.Deserialize<List<Tarea>>(jsonString) ?? new List<Tarea>();
-        }
-        catch (JsonException)
-        {
-            return new List<Tarea>();
-        }
+        // Transformación: DTO -> Dominio
+        return LeerDtosDesdeDisco().Select(MapearADominio);
     }
 
-    public Tarea? ObtenerPorId(int id) => ObtenerTodas().FirstOrDefault(t => t.Id == id);
+    public Tarea? ObtenerPorId(int id)
+    {
+        var dto = LeerDtosDesdeDisco().FirstOrDefault(d => d.Id == id);
+        return dto != null ? MapearADominio(dto) : null;
+    }
 
     public void Actualizar(Tarea tarea)
     {
-        var tareas = ObtenerTodas().ToList();
-        var index = tareas.FindIndex(t => t.Id == tarea.Id);
-        
+        var dtos = LeerDtosDesdeDisco();
+        var index = dtos.FindIndex(d => d.Id == tarea.Id);
+
         if (index != -1)
-    {
-        // Se elimina la línea 'tabs[index] = tarea;' que causaba el error de compilación
-        tareas[index] = tarea;
-        GuardarTodo(tareas);
-    }
+        {
+            dtos[index] = MapearADto(tarea);
+            GuardarDtosEnDisco(dtos);
+        }
     }
 
     public void Eliminar(int id)
     {
-        var tareas = ObtenerTodas().ToList();
-        var tareaAEliminar = tareas.FirstOrDefault(t => t.Id == id);
+        var dtos = LeerDtosDesdeDisco();
+        var dtoAEliminar = dtos.FirstOrDefault(d => d.Id == id);
 
-        if (tareaAEliminar != null)
+        if (dtoAEliminar != null)
         {
-            tareas.Remove(tareaAEliminar);
-            GuardarTodo(tareas);
+            dtos.Remove(dtoAEliminar);
+            GuardarTodo(dtos);
         }
         else
         {
@@ -76,10 +72,59 @@ public class JsonTareaRepository : ITareaRepository
         }
     }
 
-    private void GuardarTodo(List<Tarea> tareas)
+    // ==========================================
+    // MÉTODOS DE MAPEO (TRANSFORMACIÓN DE CAPAS)
+    // ==========================================
+    
+    private TareaDto MapearADto(Tarea tarea)
+    {
+        return new TareaDto(
+            tarea.Id,
+            tarea.Titulo.Valor,
+            tarea.Descripcion,
+            tarea.Responsable.GetType().Name.ToLower(), // Guarda "persona"
+            tarea.Responsable.Nombre,
+            tarea.Responsable.Apellido,
+            tarea.ECompletado
+        );
+    }
+
+    private Tarea MapearADominio(TareaDto dto)
+    {
+        IAsignable responsable = dto.TipoResponsable switch
+        {
+            "persona" => new Persona(dto.NombreResponsable, dto.ApellidoResponsable),
+            _ => throw new NotSupportedException($"Tipo de responsable '{dto.TipoResponsable}' no soportado.")
+        };
+
+        var tarea = new Tarea(dto.Id, new TituloTarea(dto.Titulo), dto.Descripcion, responsable)
+        {
+            ECompletado = dto.EstaCompletado
+        };
+        return tarea;
+    }
+
+    // ==========================================
+    // MÉTODOS DE INFRAESTRUCTURA DE BAJO NIVEL
+    // ==========================================
+
+    private List<TareaDto> LeerDtosDesdeDisco()
+    {
+        if (!File.Exists(_rutaArchivo)) return new List<TareaDto>();
+        try
+        {
+            string jsonString = File.ReadAllText(_rutaArchivo);
+            return JsonSerializer.Deserialize<List<TareaDto>>(jsonString) ?? new List<TareaDto>();
+        }
+        catch (JsonException) { return new List<TareaDto>(); }
+    }
+
+    private void GuardarDtosEnDisco(List<TareaDto> dtos) => GuardarTodo(dtos);
+
+    private void GuardarTodo(List<TareaDto> dtos)
     {
         var opciones = new JsonSerializerOptions { WriteIndented = true };
-        string jsonString = JsonSerializer.Serialize(tareas, opciones);
+        string jsonString = JsonSerializer.Serialize(dtos, opciones);
         File.WriteAllText(_rutaArchivo, jsonString);
     }
 }

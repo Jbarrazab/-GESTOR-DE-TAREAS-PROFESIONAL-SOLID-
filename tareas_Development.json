@@ -1,75 +1,29 @@
 [
   {
     "Id": 1,
-    "Titulo": null,
-    "Descripcion": "google 23",
-    "Responsable": null,
-    "ECompletado": false
+    "Titulo": "Actualizacion DTO",
+    "Descripcion": "wegjnhsergnsg",
+    "TipoResponsable": "persona",
+    "NombreResponsable": "jafit",
+    "ApellidoResponsable": "barraza",
+    "EstaCompletado": false
   },
   {
-    "Id": 3,
-    "Titulo": null,
-    "Descripcion": "Tarea en produccion test",
-    "Responsable": null,
-    "ECompletado": false
+    "Id": 2,
+    "Titulo": "Ejemplo Actualizado",
+    "Descripcion": "",
+    "TipoResponsable": "persona",
+    "NombreResponsable": "kfjhb",
+    "ApellidoResponsable": "kswdhjf",
+    "EstaCompletado": false
   },
   {
     "Id": 4,
-    "Titulo": null,
-    "Descripcion": "**************",
-    "Responsable": null,
-    "ECompletado": false
-  },
-  {
-    "Id": 5,
-    "Titulo": null,
-    "Descripcion": "#############",
-    "Responsable": null,
-    "ECompletado": false
-  },
-  {
-    "Id": 6,
-    "Titulo": {
-      "Valor": "Pruebas unitarias"
-    },
-    "Descripcion": "Estudiar pruebas y hacer casos practicos",
-    "Responsable": {
-      "$type": "persona",
-      "Nombre": "Jafit",
-      "Apellido": "Barraza",
-      "Identificador": "barraza_jafit",
-      "NombreVisual": "Jafit Barraza"
-    },
-    "ECompletado": false
-  },
-  {
-    "Id": 7,
-    "Titulo": {
-      "Valor": "Pruebas1"
-    },
-    "Descripcion": "pruebas ejemplo 1",
-    "Responsable": {
-      "$type": "persona",
-      "Nombre": "jafit",
-      "Apellido": "barraza",
-      "Identificador": "barraza_jafit",
-      "NombreVisual": "jafit barraza"
-    },
-    "ECompletado": false
-  },
-  {
-    "Id": 8,
-    "Titulo": {
-      "Valor": "Prueba Tarde"
-    },
-    "Descripcion": "Flujo completo en fornada tarde",
-    "Responsable": {
-      "$type": "persona",
-      "Nombre": "Jafit",
-      "Apellido": "Barraza",
-      "Identificador": "barraza_jafit",
-      "NombreVisual": "Jafit Barraza"
-    },
-    "ECompletado": false
+    "Titulo": "Actualizacion de nombre",
+    "Descripcion": "Descripcion actualizada",
+    "TipoResponsable": "persona",
+    "NombreResponsable": "skhfgb",
+    "ApellidoResponsable": "kaljrhg",
+    "EstaCompletado": false
   }
 ]

@@ -25,8 +25,9 @@ public class ConsoleUi
             Console.WriteLine("1. Agregar Tarea");
             Console.WriteLine("2. Listar Tareas");
             Console.WriteLine("3. Marcar Tarea como Completada");
-            Console.WriteLine("4. Eliminar Tarea");
-            Console.WriteLine("5. Salir");
+            Console.WriteLine("4. Editar Tarea");
+            Console.WriteLine("5. Eliminar Tarea");
+            Console.WriteLine("6. Salir");
             Console.Write("Selecciona una opción: ");
 
             string? opcion = Console.ReadLine();
@@ -113,8 +114,42 @@ case "1":
                         Console.WriteLine("Por favor, ingresa un número de ID válido.");
                     }
                     break;
+                
+                case "4": 
+                    Console.Write("\nIngresa el ID de la tarea que deseas EDITAR: ");
+                    if (int.TryParse(Console.ReadLine(), out int idEditar))
+                    {
+                        Console.Write("Nuevo Título: ");
+                        string? nuevoT = Console.ReadLine();
 
-                case "4":
+                        Console.Write("Nueva Descripción: ");
+                        string? nuevaD = Console.ReadLine();
+
+                        try
+                        {
+                            _servicio.ActualizarTarea(idEditar, nuevoT ?? string.Empty, nuevaD ?? string.Empty);
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("¡Tarea actualizada con éxito en el archivo JSON!");
+                        }
+                        catch (KeyNotFoundException ex)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine($"Error: {ex.Message}");
+                        }
+                        catch (ArgumentException ex)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine($"Error de Validación: {ex.Message}");
+                        }
+                        finally { Console.ResetColor(); }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Por favor, ingresa un número de ID válido.");
+                    }
+                    break;
+
+                case "5":
                     Console.Write("\nIngresa el ID de la tarea a eliminar: ");
                     if (int.TryParse(Console.ReadLine(), out int idEliminar))
                     {
@@ -136,7 +171,8 @@ case "1":
                         Console.WriteLine("Por favor, ingresa un número de ID válido.");
                     }
                     break;
-                case "5":
+
+                case "6":
                     continuar = false;
                     Console.WriteLine("\n¡Gracias por usar la aplicación!");
                     break;
