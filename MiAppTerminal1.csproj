@@ -11,7 +11,8 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.12" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.12" />
     
-    <None Update="appsettings.json">
+    <!-- * actualiza y copia TODOS los archivos appsettings (Development, Production, etc.) -->
+    <None Update="appsettings*.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
