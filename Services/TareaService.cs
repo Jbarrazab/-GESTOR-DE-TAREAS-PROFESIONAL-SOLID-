@@ -1,5 +1,6 @@
 using MiAppTerminal1.Domain;
 using MiAppTerminal1.Interfaces;
+using Microsoft.VisualBasic;
 
 namespace MiAppTerminal1.Services; // 2. Corregido a plural para alinearse con las buenas prácticas
 
@@ -43,4 +44,22 @@ public class TareaService
         tarea.ECompletado = true; 
         _repository.Actualizar(tarea);
     }
+
+    public void EliminiarTarea (int id)
+    {
+        if (id <=0)
+        {
+            throw new KeyNotFoundException($"No se encontró ninguna tarea con el ID: {id}");
+        }
+
+        var tarea = _repository.ObtenerPorId(id);
+        if (tarea == null)
+        {
+            throw new KeyNotFoundException($"No se encontró ninguna tarea con el ID: {id}");
+        }
+
+        _repository.Eliminar(id);
+      
+    }    
+
 }

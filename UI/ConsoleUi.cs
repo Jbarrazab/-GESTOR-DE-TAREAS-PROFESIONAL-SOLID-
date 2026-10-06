@@ -25,7 +25,8 @@ public class ConsoleUi
             Console.WriteLine("1. Agregar Tarea");
             Console.WriteLine("2. Listar Tareas");
             Console.WriteLine("3. Marcar Tarea como Completada");
-            Console.WriteLine("4. Salir");
+            Console.WriteLine("4. Eliminar Tarea");
+            Console.WriteLine("5. Salir");
             Console.Write("Selecciona una opción: ");
 
             string? opcion = Console.ReadLine();
@@ -90,6 +91,28 @@ public class ConsoleUi
                     break;
 
                 case "4":
+                    Console.Write("\nIngresa el ID de la tarea a eliminar: ");
+                    if (int.TryParse(Console.ReadLine(), out int idEliminar))
+                    {
+                        try
+                        {
+                            _servicio.EliminiarTarea (idEliminar);
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("¡Tarea eliminada correctamente!");
+                        }
+                        catch (KeyNotFoundException ex)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine($"Error: {ex.Message}");
+                        }
+                        finally { Console.ResetColor(); }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Por favor, ingresa un número de ID válido.");
+                    }
+                    break;
+                case "5":
                     continuar = false;
                     Console.WriteLine("\n¡Gracias por usar la aplicación!");
                     break;
