@@ -1,13 +1,14 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MiAppTerminal1.Domain;
 
 namespace MiAppTerminal1.Interfaces;
 
 public interface ITareaRepository
 {
-    void Guardar(Tarea tarea);
-    IEnumerable<Tarea> ObtenerTodas();
-    Tarea? ObtenerPorId(int id);
-    void Actualizar(Tarea tarea);
-    void Eliminar(int id);
+    Task GuardarAsync(Tarea tarea);
+    Task<IEnumerable<Tarea>> ObtenerTodasAsync();
+    Task<Tarea?> ObtenerPorIdAsync(int id);
+    Task ActualizarAsync(Tarea tarea);
+    Task EliminarAsync(int id);
 }

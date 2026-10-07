@@ -1,89 +1,67 @@
-using MiAppTerminal1.Domain;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks; // <-- NUEVO USING
+using MiAppTerminal1.Domain;
 using MiAppTerminal1.Interfaces;
 
-namespace MiAppTerminal1.Services; // 
+namespace MiAppTerminal1.Services;
 
 public class TareaService
 {
-
     private readonly ITareaRepository _repository;
 
-    // inyección del contrato
     public TareaService(ITareaRepository repository)
     {
         _repository = repository;
     }
 
-    public void CrearTarea(string tituloRaw, string descripcion, string nombreResponsable, string apellidoResponsable)
+    public async Task CrearTareaAsync(string tituloRaw, string descripcion, string nombreRes, string apellidoRes)
     {
         var titulo = new TituloTarea(tituloRaw);
-        var responsable = new Persona(nombreResponsable, apellidoResponsable);
+        var responsable = new Persona(nombreRes, apellidoRes);
 
         var nuevaTarea = new Tarea(0, titulo, descripcion, responsable);
-        _repository.Guardar(nuevaTarea);
+        await _repository.GuardarAsync(nuevaTarea); // Espera asíncrona segura
     }
 
-    public IEnumerable<Tarea> ListarTareas()
-    {
-        return _repository.ObtenerTodas();
-    }
+    public async Task<IEnumerable<Tarea>> ListarTareasAsync() => await _repository.ObtenerTodasAsync();
 
-    public void MarcarComoTerminada(int id)
+    public async Task MarcarComoTerminadaAsync(int id)
     {
-        var tarea = _repository.ObtenerPorId(id);
+        var tarea = await _repository.ObtenerPorIdAsync(id);
         if (tarea == null)
         {
-            throw new KeyNotFoundException($"No se encontró ninguna tarea con el ID: {id}");
+            throw new KeyNotFoundException($"No se encontró la tarea con el ID: {id}");
         }
 
-        // 4. Corregido al nombre exacto de la propiedad de tu entidad Tarea
-        tarea.ECompletado = true;
-        _repository.Actualizar(tarea);
+        tarea.ECompletado = true; 
+        await _repository.ActualizarAsync(tarea);
     }
 
-    public void EliminiarTarea(int id)
+    public async Task ActualizarTareaAsync(int id, string nuevoTitulo, string nuevaDescripcion)
     {
-        if (id <= 0)
-        {
-            throw new KeyNotFoundException($"No se encontró ninguna tarea con el ID: {id}");
-        }
+        if (id <= 0) throw new ArgumentException("El ID debe ser mayor a cero.");
 
-        var tarea = _repository.ObtenerPorId(id);
-        if (tarea == null)
-        {
-            throw new KeyNotFoundException($"No se encontró ninguna tarea con el ID: {id}");
-        }
-
-        _repository.Eliminar(id);
-    }
-
-    public void ActualizarTarea(int id, string nuevoTitulo, string nuevaDescripcion)
-    {
-        // 1. Validaciones defensivas del Dominio
-        if (id <= 0)
-        {
-            throw new ArgumentException("El ID de la tarea debe ser un número entero mayor a cero.");
-        }
-
-        var tareaExistente = _repository.ObtenerPorId(id);
+        var tareaExistente = await _repository.ObtenerPorIdAsync(id);
         if (tareaExistente == null)
         {
-            throw new KeyNotFoundException($"No se encontró ninguna tarea con el ID: {id} para actualizar.");
+            throw new KeyNotFoundException($"No se encontró la tarea con el ID: {id}");
         }
 
-        // 2. Reconstruimos los objetos de negocio con las nuevas reglas
         var tituloActualizado = new TituloTarea(nuevoTitulo);
-
-        // 3. Modificamos la entidad de dominio legítimamente (usando mutabilidad controlada)
-        // Para cumplir Clean Code, usamos los métodos de asignación que creamos en el dominio
         var tareaActualizada = new Tarea(tareaExistente.Id, tituloActualizado, nuevaDescripcion, tareaExistente.Responsable)
         {
-            ECompletado = tareaExistente.ECompletado // Mantenemos el estado de completado intacto
+            ECompletado = tareaExistente.ECompletado
         };
 
-        // 4. Mandamos la entidad modificada al repositorio (el cual la convertirá a DTO para el JSON)
-        _repository.Actualizar(tareaActualizada);
+        await _repository.ActualizarAsync(tareaActualizada);
     }
 
+    public async Task EliminarTareaAsync(int id)
+    {
+        if (id <= 0) throw new ArgumentException("El ID debe ser mayor a cero.");
+        
+        // El repositorio internamente validará si existe antes de borrar
+        await _repository.EliminarAsync(id);
+    }
 }

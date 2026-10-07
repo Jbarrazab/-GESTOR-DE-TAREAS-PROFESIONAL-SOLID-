@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using MiAppTerminal1.Domain;
 using MiAppTerminal1.Interfaces;
 
@@ -8,37 +9,43 @@ namespace MiAppTerminal1.Infrastructure;
 public class MemoriaTareaRepository : ITareaRepository
 {
     private readonly List<Tarea> _tareas = new();
-    private int _idActual = 1;
 
-    public void Guardar(Tarea tarea)
+    public Task GuardarAsync(Tarea tarea)
     {
-        tarea.Id = _idActual++;
+        int nuevoId = _tareas.Any() ? _tareas.Max(t => t.Id) + 1 : 1;
+        tarea.Id = nuevoId;
         _tareas.Add(tarea);
+        return Task.CompletedTask;
     }
 
-    public IEnumerable<Tarea> ObtenerTodas() => _tareas;
+    public Task<IEnumerable<Tarea>> ObtenerTodasAsync()
+    {
+        return Task.FromResult<IEnumerable<Tarea>>(_tareas);
+    }
 
-    public Tarea? ObtenerPorId(int id) => _tareas.FirstOrDefault(t => t.Id == id);
+    public Task<Tarea?> ObtenerPorIdAsync(int id)
+    {
+        var tarea = _tareas.FirstOrDefault(t => t.Id == id);
+        return Task.FromResult(tarea);
+    }
 
-    public void Actualizar(Tarea tarea)
+    public Task ActualizarAsync(Tarea tarea)
     {
         var index = _tareas.FindIndex(t => t.Id == tarea.Id);
         if (index != -1)
         {
             _tareas[index] = tarea;
         }
+        return Task.CompletedTask;
     }
 
-    public void Eliminar(int id)
+    public Task EliminarAsync(int id)
     {
-        var tareaAEliminar = _tareas.FirstOrDefault(t => t.Id == id);
-        if (tareaAEliminar != null)
+        var tarea = _tareas.FirstOrDefault(t => t.Id == id);
+        if (tarea != null)
         {
-            _tareas.Remove(tareaAEliminar);
+            _tareas.Remove(tarea);
         }
-        else
-        {
-            throw new KeyNotFoundException($"No se encontró ninguna tarea con el ID: {id} para eliminar.");
-        }
+        return Task.CompletedTask;
     }
 }

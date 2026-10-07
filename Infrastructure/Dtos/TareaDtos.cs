@@ -8,4 +8,7 @@ public record TareaDto(
     string NombreResponsable,
     string ApellidoResponsable,
     bool EstaCompletado
-);
+)
+{
+    public bool ECompletado { get; internal set; }
+}

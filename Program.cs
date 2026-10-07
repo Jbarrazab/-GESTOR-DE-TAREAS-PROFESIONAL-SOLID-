@@ -1,31 +1,41 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MiAppTerminal1.Interfaces;
 using MiAppTerminal1.Infrastructure;
 using MiAppTerminal1.Services;
-using MiAppTerminal1.Ui;
+using MiAppTerminal1.Api;
+using Scalar.AspNetCore; // Requisito de infraestructura visual para .NET 10
 
-// 1. Inicializamos el Host de .NET moderno
-var builder =  Host.CreateApplicationBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
-// 2. Registro Central de Dependencias (Contenedor de Inyección Automática)
-// Configuramos la persistencia en JSON y la lógica de negocio usando el ciclo de vida Scoped
-builder.Services.AddScoped<ITareaRepository, JsonTareaRepository>(); 
+// ==========================================
+// 1. REGISTRO DE DEPENDENCIAS (IoC / SOLID - D)
+// ==========================================
+builder.Services.AddScoped<ITareaRepository, JsonTareaRepository>();
 builder.Services.AddScoped<TareaService>();
 
-// Registramos tu componente de interfaz de usuario de consola
-builder.Services.AddTransient<ConsoleUi>();
+// CLEAN CODE: Registramos el motor nativo de OpenAPI de Microsoft (.NET 10)
+builder.Services.AddOpenApi(); 
 
-// Construimos el Host con los servicios compilados en el contenedor
 var app = builder.Build();
 
-// 3. Punto de Entrada Limpio con Alcance (Scope) de Ejecución
-// Creamos un Scope seguro para resolver e iniciar los componentes principales
-using (var scope = app.Services.CreateScope())
+// ==========================================
+// 2. CONFIGURACIÓN DEL PIPELINE DE RED (MIDDLEWARES)
+// ==========================================
+if (app.Environment.IsDevelopment())
 {
-    // El contenedor analiza ConsoleUi, detecta sus necesidades en cascada y resuelve el árbol de objetos
-    var uiPrincipal = scope.ServiceProvider.GetRequiredService<ConsoleUi>();
-
-    // Ejecutamos tu menú interactivo corregido
-    uiPrincipal.EjecutarMenu();
+    // CRITERIO SENIOR: Herramientas de desarrollo aisladas por entorno
+    app.UseDeveloperExceptionPage();
+    app.MapOpenApi();             // Genera el esquema JSON en /openapi/v1.json
+    app.MapScalarApiReference();   // Renderiza el panel interactivo en /scalar/v1
 }
+
+// ==========================================
+// 3. ORQUESTACIÓN MODULAR (SOLID - S / ARQUITECTURA LIMPIA)
+// ==========================================
+// El Program NO sabe qué rutas existen; delega la responsabilidad a la capa API
+app.MapTareaEndpoints(); 
+
+// 4. ARRANQUE DEL SERVIDOR
+await app.RunAsync(); // Ejecución asíncronica nativa de extremo a extremo
