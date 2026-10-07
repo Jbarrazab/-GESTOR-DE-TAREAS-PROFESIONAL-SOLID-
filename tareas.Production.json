@@ -1,32 +1,11 @@
 [
   {
-    "Id": 2,
-    "Descripcion": "Gestionar permiso de instalacion ",
-    "ECompletado": false
-  },
-  {
-    "Id": 3,
-    "Descripcion": "Agregar Pipeline",
-    "ECompletado": false
-  },
-  {
-    "Id": 4,
-    "Descripcion": "Agregar Pipeline999999",
-    "ECompletado": false
-  },
-  {
-    "Id": 5,
-    "Descripcion": "Agregar Pipeline999999",
-    "ECompletado": true
-  },
-  {
-    "Id": 6,
-    "Descripcion": "google1",
-    "ECompletado": false
-  },
-  {
-    "Id": 7,
-    "Descripcion": "1",
-    "ECompletado": false
+    "Id": 1,
+    "Titulo": "qqqqqqqqqqq",
+    "Descripcion": "eeeeeeeeeeee",
+    "TipoResponsable": "persona",
+    "NombreResponsable": "kjhv",
+    "ApellidoResponsable": "kjhvu",
+    "EstaCompletado": true
   }
 ]
