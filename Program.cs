@@ -25,7 +25,7 @@ var app = builder.Build();
 // ==========================================
 if (app.Environment.IsDevelopment())
 {
-    // CRITERIO SENIOR: Herramientas de desarrollo aisladas por entorno
+    // Herramientas de desarrollo aisladas por entorno
     app.UseDeveloperExceptionPage();
     app.MapOpenApi();             // Genera el esquema JSON en /openapi/v1.json
     app.MapScalarApiReference();   // Renderiza el panel interactivo en /scalar/v1

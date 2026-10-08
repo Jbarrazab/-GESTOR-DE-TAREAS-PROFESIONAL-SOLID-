@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web"> <!-- 💡 Esto activa Microsoft.AspNetCore automáticamente -->
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -8,11 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Paquetes necesarios para la interfaz visual e interactiva en .NET 10 -->
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0-preview.1.25121.8" />
-    <PackageReference Include="Scalar.AspNetCore" Version="2.0.14" />
+    <!-- 1. Sincronizamos con la versión RC1 que tu máquina quiere resolver de forma nativa -->
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0-rc.1.25451.107" />
     
-    <!-- Mantenemos tu regla de configuraciones appsettings -->
+    <!-- 2. CONTROL DE VULNERABILIDAD: Forzamos la versión 2.7.5 para mitigar el CVE-2026-49451 -->
+    <PackageReference Include="Microsoft.OpenApi" Version="2.7.5" />
+    
+    <!-- 3. Actualizamos Scalar para que sea completamente compatible con la rama RC -->
+    <PackageReference Include="Scalar.AspNetCore" Version="2.0.18" />
+
+    <!-- Mantener tus reglas de configuración -->
     <None Update="appsettings*.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
