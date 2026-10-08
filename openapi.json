@@ -1,0 +1,168 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "MiAppTerminal1 | v1",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/tareas": {
+      "get": {
+        "tags": [
+          "MiAppTerminal1"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MiAppTerminal1"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearTareaRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/tareas/completar/{id}": {
+      "put": {
+        "tags": [
+          "MiAppTerminal1"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/tareas/{id}": {
+      "put": {
+        "tags": [
+          "MiAppTerminal1"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarTareaRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "MiAppTerminal1"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ActualizarTareaRequest": {
+        "required": [
+          "nuevoTitulo",
+          "nuevaDescripcion"
+        ],
+        "type": "object",
+        "properties": {
+          "nuevoTitulo": {
+            "type": "string"
+          },
+          "nuevaDescripcion": {
+            "type": "string"
+          }
+        }
+      },
+      "CrearTareaRequest": {
+        "required": [
+          "titulo",
+          "descripcion",
+          "nombreResponsable",
+          "apellidoResponsable"
+        ],
+        "type": "object",
+        "properties": {
+          "titulo": {
+            "type": "string"
+          },
+          "descripcion": {
+            "type": "string"
+          },
+          "nombreResponsable": {
+            "type": "string"
+          },
+          "apellidoResponsable": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "MiAppTerminal1"
+    }
+  ]
+}

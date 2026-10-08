@@ -6,7 +6,8 @@
     "TipoResponsable": "persona",
     "NombreResponsable": "jafit",
     "ApellidoResponsable": "barraza",
-    "EstaCompletado": false
+    "EstaCompletado": false,
+    "ECompletado": false
   },
   {
     "Id": 2,
@@ -15,15 +16,7 @@
     "TipoResponsable": "persona",
     "NombreResponsable": "kfjhb",
     "ApellidoResponsable": "kswdhjf",
-    "EstaCompletado": false
-  },
-  {
-    "Id": 4,
-    "Titulo": "Actualizacion de nombre",
-    "Descripcion": "Descripcion actualizada",
-    "TipoResponsable": "persona",
-    "NombreResponsable": "skhfgb",
-    "ApellidoResponsable": "kaljrhg",
-    "EstaCompletado": false
+    "EstaCompletado": false,
+    "ECompletado": false
   }
 ]
