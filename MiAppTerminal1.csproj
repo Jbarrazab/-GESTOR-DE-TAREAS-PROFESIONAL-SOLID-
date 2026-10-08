@@ -5,11 +5,21 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    
+    <!-- PROPIEDADES DE GENERACIÓN DE OPENAPI EN TIEMPO DE COMPILACIÓN -->
+    <OpenApiGenerateDocumentsOnBuild>true</OpenApiGenerateDocumentsOnBuild>
+    <OpenApiGenerateDocumentsOptions>--file-name openapi</OpenApiGenerateDocumentsOptions>
+    <OpenApiDocumentsDirectory>.</OpenApiDocumentsDirectory>
+
   </PropertyGroup>
 
   <ItemGroup>
     <!-- 1. Sincronizamos con la versión RC1 que tu máquina quiere resolver de forma nativa -->
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0-rc.1.25451.107" />
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" Version="10.0.12">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     
     <!-- 2. CONTROL DE VULNERABILIDAD: Forzamos la versión 2.7.5 para mitigar el CVE-2026-49451 -->
     <PackageReference Include="Microsoft.OpenApi" Version="2.7.5" />
