@@ -45,7 +45,9 @@ public class MemoriaTareaRepository : ITareaRepository
         if (tarea != null)
         {
             _tareas.Remove(tarea);
+            return Task.CompletedTask;
         }
-        return Task.CompletedTask;
+
+        throw new KeyNotFoundException($"No se encontró ninguna tarea con el ID: {id} para eliminar.");
     }
 }

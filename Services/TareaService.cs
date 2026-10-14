@@ -15,19 +15,35 @@ public class TareaService
         _repository = repository;
     }
 
-    public async Task CrearTareaAsync(string tituloRaw, string descripcion, string nombreRes, string apellidoRes)
+    public async Task<Tarea> CrearTareaAsync(string tituloRaw, string descripcion, string nombreRes, string apellidoRes)
     {
         var titulo = new TituloTarea(tituloRaw);
         var responsable = new Persona(nombreRes, apellidoRes);
 
         var nuevaTarea = new Tarea(0, titulo, descripcion, responsable);
         await _repository.GuardarAsync(nuevaTarea); // Espera asíncrona segura
+        return nuevaTarea;
     }
 
-    public async Task<IEnumerable<Tarea>> ListarTareasAsync() => await _repository.ObtenerTodasAsync();
+    public Task<IEnumerable<Tarea>> ListarTareasAsync() => _repository.ObtenerTodasAsync();
+
+    public async Task<Tarea> ObtenerTareaPorIdAsync(int id)
+    {
+        if (id <= 0) throw new ArgumentException("El ID debe ser mayor a cero.");
+
+        var tarea = await _repository.ObtenerPorIdAsync(id);
+        if (tarea == null)
+        {
+            throw new KeyNotFoundException($"No se encontró la tarea con el ID: {id}");
+        }
+
+        return tarea;
+    }
 
     public async Task MarcarComoTerminadaAsync(int id)
     {
+        if (id <= 0) throw new ArgumentException("El ID debe ser mayor a cero.");
+
         var tarea = await _repository.ObtenerPorIdAsync(id);
         if (tarea == null)
         {

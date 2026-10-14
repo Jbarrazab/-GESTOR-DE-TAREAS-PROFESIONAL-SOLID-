@@ -113,7 +113,7 @@ public class JsonTareaRepository : ITareaRepository
 
         return new Tarea(dto.Id, new TituloTarea(dto.Titulo), dto.Descripcion, responsable)
         {
-            ECompletado = dto.ECompletado
+            ECompletado = dto.EstaCompletado || dto.ECompletadoLegacy == true
         };
     }
 }

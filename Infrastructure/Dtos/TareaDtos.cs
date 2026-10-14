@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace MiAppTerminal1.Infrastructure.Dtos;
 
 public record TareaDto(
@@ -10,5 +12,7 @@ public record TareaDto(
     bool EstaCompletado
 )
 {
-    public bool ECompletado { get; internal set; }
+    [JsonPropertyName("ECompletado")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public bool? ECompletadoLegacy { get; init; }
 }

@@ -1,0 +1,134 @@
+{
+  "Api/Requests/ActualizarTareaRequest.cs": {
+    "mtime": 1792009655.7161791,
+    "seen": 1792011616.5272481,
+    "ast_hash": "e0e97d95da4870a660bc6eccc94731f9",
+    "semantic_hash": "e0e97d95da4870a660bc6eccc94731f9"
+  },
+  "Api/Requests/CrearTareaRequest.cs": {
+    "mtime": 1792009655.6980338,
+    "seen": 1792011616.527253,
+    "ast_hash": "2d838e42c14d885c2b7cd04604492d80",
+    "semantic_hash": "2d838e42c14d885c2b7cd04604492d80"
+  },
+  "Api/Responses/MensajeResponse.cs": {
+    "mtime": 1792008491.286208,
+    "seen": 1792011616.5272548,
+    "ast_hash": "4ea6d05e2d60b34cb442e4f95ef74c9d",
+    "semantic_hash": "4ea6d05e2d60b34cb442e4f95ef74c9d"
+  },
+  "Api/Responses/TareaResponse.cs": {
+    "mtime": 1792008491.286208,
+    "seen": 1792011616.5272558,
+    "ast_hash": "56c307378a0fe6ead7f3e7f113085ccb",
+    "semantic_hash": "56c307378a0fe6ead7f3e7f113085ccb"
+  },
+  "Api/TareaEndpoindts.cs": {
+    "mtime": 1792009655.7344258,
+    "seen": 1792011616.5272565,
+    "ast_hash": "c838bd3a90436f1e0e86583c9b0e79f2",
+    "semantic_hash": "c838bd3a90436f1e0e86583c9b0e79f2"
+  },
+  "Domain/IAsignable.cs": {
+    "mtime": 1791319392.7261193,
+    "seen": 1792011616.5272577,
+    "ast_hash": "129fdd68f8dfafb0b2855b67e016637a",
+    "semantic_hash": "129fdd68f8dfafb0b2855b67e016637a"
+  },
+  "Domain/Persona.cs": {
+    "mtime": 1791319392.728757,
+    "seen": 1792011616.5272584,
+    "ast_hash": "8de72f217604d9bea1c74b3a640f0efb",
+    "semantic_hash": "8de72f217604d9bea1c74b3a640f0efb"
+  },
+  "Domain/Tarea.cs": {
+    "mtime": 1791315389.6456444,
+    "seen": 1792011616.527259,
+    "ast_hash": "295bce9133b653525efa049d976466ac",
+    "semantic_hash": "295bce9133b653525efa049d976466ac"
+  },
+  "Domain/Titulotarea.cs": {
+    "mtime": 1791319392.7300193,
+    "seen": 1792011616.5272598,
+    "ast_hash": "d389c5f9cfe717c69dc188f66208b128",
+    "semantic_hash": "d389c5f9cfe717c69dc188f66208b128"
+  },
+  "Infrastructure/Dtos/TareaDtos.cs": {
+    "mtime": 1792009820.012436,
+    "seen": 1792011616.5272608,
+    "ast_hash": "ce1f9f115baa66c2193564f2676b9c7f",
+    "semantic_hash": "ce1f9f115baa66c2193564f2676b9c7f"
+  },
+  "Infrastructure/JsonTareaRepository.cs": {
+    "mtime": 1792009820.040439,
+    "seen": 1792011616.5272613,
+    "ast_hash": "358e72922b1401897c18a995a1a21386",
+    "semantic_hash": "358e72922b1401897c18a995a1a21386"
+  },
+  "Infrastructure/MemoriaTareaRepository.cs": {
+    "mtime": 1792008491.3192427,
+    "seen": 1792011616.5272622,
+    "ast_hash": "58b2a815b219f40d00467c1852595e0f",
+    "semantic_hash": "58b2a815b219f40d00467c1852595e0f"
+  },
+  "Interface/ITareaRepository.cs": {
+    "mtime": 1791985930.0258102,
+    "seen": 1792011616.5272627,
+    "ast_hash": "fa419f1976589d56753a2b1e6f00b4c0",
+    "semantic_hash": "fa419f1976589d56753a2b1e6f00b4c0"
+  },
+  "MiAppTerminal1.csproj": {
+    "mtime": 1791985930.0258102,
+    "seen": 1792011616.5272634,
+    "ast_hash": "8a0014ef5404c8b77a3da49d54c802d3",
+    "semantic_hash": "8a0014ef5404c8b77a3da49d54c802d3"
+  },
+  "Program.cs": {
+    "mtime": 1792009786.2543385,
+    "seen": 1792011616.5272644,
+    "ast_hash": "44edd9e5c4391bf85f7aff7556726b64",
+    "semantic_hash": "44edd9e5c4391bf85f7aff7556726b64"
+  },
+  "Properties/launchSettings.json": {
+    "mtime": 1791985930.0308647,
+    "seen": 1792011616.527265,
+    "ast_hash": "151954e4108b098d2610d3e9e16aec0e",
+    "semantic_hash": "151954e4108b098d2610d3e9e16aec0e"
+  },
+  "Services/TareaService.cs": {
+    "mtime": 1792009626.9723444,
+    "seen": 1792011616.5272658,
+    "ast_hash": "8c6f6d0ea537ece590fb6b0ac0dd9b34",
+    "semantic_hash": "8c6f6d0ea537ece590fb6b0ac0dd9b34"
+  },
+  "appsettings.Development.json": {
+    "mtime": 1791985930.0357232,
+    "seen": 1792011616.5272663,
+    "ast_hash": "a86b11cc5d3971686f61da29482b8ca4",
+    "semantic_hash": "a86b11cc5d3971686f61da29482b8ca4"
+  },
+  "appsettings.json": {
+    "mtime": 1791985930.0357232,
+    "seen": 1792011616.527267,
+    "ast_hash": "285fe2c17fcd27a514b7ea76ec7f4c15",
+    "semantic_hash": "285fe2c17fcd27a514b7ea76ec7f4c15"
+  },
+  "openapi.json": {
+    "mtime": 1792010000.2468665,
+    "seen": 1792011616.527268,
+    "ast_hash": "ec921e1029a17b2c146365aca4c73094",
+    "semantic_hash": "ec921e1029a17b2c146365aca4c73094"
+  },
+  "tareas.Production.json": {
+    "mtime": 1791985930.0421152,
+    "seen": 1792011616.5272684,
+    "ast_hash": "ae77e177b2785e0289d2f73bd974cdb9",
+    "semantic_hash": "ae77e177b2785e0289d2f73bd974cdb9"
+  },
+  "tareas_Development.json": {
+    "mtime": 1792010317.9929628,
+    "seen": 1792011616.5272691,
+    "ast_hash": "2377ca5acc95927c8769f8851a83d3c8",
+    "semantic_hash": "2377ca5acc95927c8769f8851a83d3c8"
+  }
+}
