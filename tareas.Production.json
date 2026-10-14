@@ -1,11 +1,20 @@
 [
   {
-    "Id": 1,
-    "Titulo": "qqqqqqqqqqq",
-    "Descripcion": "eeeeeeeeeeee",
+    "Id": 2,
+    "Titulo": "tarea Miercoles",
+    "Descripcion": "actualizacion de estado miercoles 14",
     "TipoResponsable": "persona",
-    "NombreResponsable": "kjhv",
-    "ApellidoResponsable": "kjhvu",
+    "NombreResponsable": "Jafit",
+    "ApellidoResponsable": "Barraza",
     "EstaCompletado": true
+  },
+  {
+    "Id": 3,
+    "Titulo": "Actualizacion 843",
+    "Descripcion": "descripcion 843",
+    "TipoResponsable": "persona",
+    "NombreResponsable": "loco",
+    "ApellidoResponsable": "mario",
+    "EstaCompletado": false
   }
 ]
