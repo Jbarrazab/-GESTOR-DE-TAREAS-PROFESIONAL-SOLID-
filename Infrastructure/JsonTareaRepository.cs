@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using MiAppTerminal1.Domain;
@@ -13,63 +15,111 @@ namespace MiAppTerminal1.Infrastructure;
 
 public class JsonTareaRepository : ITareaRepository
 {
+    private static readonly ConcurrentDictionary<string, SemaphoreSlim> FileLocks = new(
+        OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
+
     private readonly string _rutaArchivo;
+    private readonly SemaphoreSlim _fileLock;
 
     public JsonTareaRepository(IConfiguration configuration)
     {
-        _rutaArchivo = configuration["ConfiguracionTareas:RutaArchivo"] ?? "tareas.json";
+        _rutaArchivo = Path.GetFullPath(configuration["ConfiguracionTareas:RutaArchivo"] ?? "tareas.json");
+        _fileLock = FileLocks.GetOrAdd(_rutaArchivo, _ => new SemaphoreSlim(1, 1));
     }
 
     public async Task GuardarAsync(Tarea tarea)
     {
-        var dtos = await LeerDtosDesdeDiscoAsync();
-        int nuevoId = dtos.Any() ? dtos.Max(d => d.Id) + 1 : 1;
-        tarea.Id = nuevoId;
+        await _fileLock.WaitAsync();
+        try
+        {
+            var dtos = await LeerDtosDesdeDiscoAsync();
+            int nuevoId = dtos.Any() ? dtos.Max(d => d.Id) + 1 : 1;
+            tarea.AsignarId(nuevoId);
 
-        var nuevoDto = MapearADto(tarea);
-        dtos.Add(nuevoDto);
-        
-        await GuardarDtosEnDiscoAsync(dtos);
+            var nuevoDto = MapearADto(tarea);
+            dtos.Add(nuevoDto);
+
+            await GuardarDtosEnDiscoAsync(dtos);
+        }
+        finally
+        {
+            _fileLock.Release();
+        }
     }
 
     public async Task<IEnumerable<Tarea>> ObtenerTodasAsync()
     {
-        var dtos = await LeerDtosDesdeDiscoAsync();
-        return dtos.Select(MapearADominio);
+        await _fileLock.WaitAsync();
+        try
+        {
+            var dtos = await LeerDtosDesdeDiscoAsync();
+            return dtos.Select(MapearADominio).ToArray();
+        }
+        finally
+        {
+            _fileLock.Release();
+        }
     }
 
     public async Task<Tarea?> ObtenerPorIdAsync(int id)
     {
-        var dtos = await LeerDtosDesdeDiscoAsync();
-        var dto = dtos.FirstOrDefault(d => d.Id == id);
-        return dto != null ? MapearADominio(dto) : null;
+        await _fileLock.WaitAsync();
+        try
+        {
+            var dtos = await LeerDtosDesdeDiscoAsync();
+            var dto = dtos.FirstOrDefault(d => d.Id == id);
+            return dto != null ? MapearADominio(dto) : null;
+        }
+        finally
+        {
+            _fileLock.Release();
+        }
     }
 
     public async Task ActualizarAsync(Tarea tarea)
     {
-        var dtos = await LeerDtosDesdeDiscoAsync();
-        var index = dtos.FindIndex(d => d.Id == tarea.Id);
-
-        if (index != -1)
+        await _fileLock.WaitAsync();
+        try
         {
-            dtos[index] = MapearADto(tarea);
-            await GuardarDtosEnDiscoAsync(dtos);
+            var dtos = await LeerDtosDesdeDiscoAsync();
+            var index = dtos.FindIndex(d => d.Id == tarea.Id);
+
+            if (index != -1)
+            {
+                dtos[index] = MapearADto(tarea);
+                await GuardarDtosEnDiscoAsync(dtos);
+                return;
+            }
+
+            throw new KeyNotFoundException($"No se encontró ninguna tarea con el ID: {tarea.Id} para actualizar.");
+        }
+        finally
+        {
+            _fileLock.Release();
         }
     }
 
     public async Task EliminarAsync(int id)
     {
-        var dtos = await LeerDtosDesdeDiscoAsync();
-        var dtoAEliminar = dtos.FirstOrDefault(d => d.Id == id);
+        await _fileLock.WaitAsync();
+        try
+        {
+            var dtos = await LeerDtosDesdeDiscoAsync();
+            var dtoAEliminar = dtos.FirstOrDefault(d => d.Id == id);
 
-        if (dtoAEliminar != null)
-        {
-            dtos.Remove(dtoAEliminar);
-            await GuardarDtosEnDiscoAsync(dtos);
+            if (dtoAEliminar != null)
+            {
+                dtos.Remove(dtoAEliminar);
+                await GuardarDtosEnDiscoAsync(dtos);
+            }
+            else
+            {
+                throw new KeyNotFoundException($"No se encontró ninguna tarea con el ID: {id} para eliminar.");
+            }
         }
-        else
+        finally
         {
-            throw new KeyNotFoundException($"No se encontró ninguna tarea con el ID: {id} para eliminar.");
+            _fileLock.Release();
         }
     }
 
@@ -84,17 +134,32 @@ public class JsonTareaRepository : ITareaRepository
         {
             // 💡 No bloquea el hilo principal del servidor mientras lee del disco
             string jsonString = await File.ReadAllTextAsync(_rutaArchivo);
-            return JsonSerializer.Deserialize<List<TareaDto>>(jsonString) ?? new List<TareaDto>();
+            return JsonSerializer.Deserialize<List<TareaDto>>(jsonString)
+                ?? throw new InvalidDataException("El archivo de tareas no contiene una colección JSON válida.");
         }
-        catch (JsonException) { return new List<TareaDto>(); }
+        catch (JsonException ex)
+        {
+            throw new InvalidDataException("El archivo de tareas contiene JSON inválido.", ex);
+        }
     }
 
     private async Task GuardarDtosEnDiscoAsync(List<TareaDto> dtos)
     {
         var opciones = new JsonSerializerOptions { WriteIndented = true };
         string jsonString = JsonSerializer.Serialize(dtos, opciones);
-        // 💡 No bloquea al servidor mientras escribe los bytes físicamente
-        await File.WriteAllTextAsync(_rutaArchivo, jsonString);
+        string temporaryPath = $"{_rutaArchivo}.{Guid.NewGuid():N}.tmp";
+        try
+        {
+            await File.WriteAllTextAsync(temporaryPath, jsonString);
+            File.Move(temporaryPath, _rutaArchivo, overwrite: true);
+        }
+        finally
+        {
+            if (File.Exists(temporaryPath))
+            {
+                File.Delete(temporaryPath);
+            }
+        }
     }
 
     private TareaDto MapearADto(Tarea tarea) => new(
@@ -111,9 +176,11 @@ public class JsonTareaRepository : ITareaRepository
             _ => throw new NotSupportedException($"Tipo '{dto.TipoResponsable}' no soportado.")
         };
 
-        return new Tarea(dto.Id, new TituloTarea(dto.Titulo), dto.Descripcion, responsable)
-        {
-            ECompletado = dto.EstaCompletado || dto.ECompletadoLegacy == true
-        };
+        return new Tarea(
+            dto.Id,
+            new TituloTarea(dto.Titulo),
+            dto.Descripcion,
+            responsable,
+            dto.EstaCompletado || dto.ECompletadoLegacy == true);
     }
 }

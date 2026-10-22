@@ -4,7 +4,7 @@
     "MiAppTerminal1": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "scalar/v1",
+      "launchUrl": "",
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"

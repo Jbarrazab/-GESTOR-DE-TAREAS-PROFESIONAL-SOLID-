@@ -77,110 +77,49 @@ public static class TareaEndpoints
         return TypedResults.Ok(response);
     }
 
-    private static async Task<IResult> ObtenerPorIdAsync(
+    private static async Task<Ok<TareaResponse>> ObtenerPorIdAsync(
         [Range(1, int.MaxValue)] int id,
-        HttpContext context,
         TareaService servicio)
     {
-        try
-        {
-            var tarea = await servicio.ObtenerTareaPorIdAsync(id);
-            return TypedResults.Ok(TareaResponse.From(tarea));
-        }
-        catch (System.ArgumentException)
-        {
-            return CrearError(context, StatusCodes.Status400BadRequest);
-        }
-        catch (KeyNotFoundException)
-        {
-            return CrearError(context, StatusCodes.Status404NotFound);
-        }
+        var tarea = await servicio.ObtenerTareaPorIdAsync(id);
+        return TypedResults.Ok(TareaResponse.From(tarea));
     }
 
-    private static async Task<IResult> CrearAsync(
+    private static async Task<Created<TareaResponse>> CrearAsync(
         CrearTareaRequest request,
-        HttpContext context,
         TareaService servicio)
     {
-        try
-        {
-            var tarea = await servicio.CrearTareaAsync(
-                request.Titulo,
-                request.Descripcion,
-                request.NombreResponsable,
-                request.ApellidoResponsable);
+        var tarea = await servicio.CrearTareaAsync(
+            request.Titulo,
+            request.Descripcion,
+            request.NombreResponsable,
+            request.ApellidoResponsable);
 
-            return TypedResults.Created($"/api/tareas/{tarea.Id}", TareaResponse.From(tarea));
-        }
-        catch (System.ArgumentException)
-        {
-            return CrearError(context, StatusCodes.Status400BadRequest);
-        }
+        return TypedResults.Created($"/api/tareas/{tarea.Id}", TareaResponse.From(tarea));
     }
 
-    private static async Task<IResult> CompletarAsync(
+    private static async Task<Ok<MensajeResponse>> CompletarAsync(
         [Range(1, int.MaxValue)] int id,
-        HttpContext context,
         TareaService servicio)
     {
-        try
-        {
-            await servicio.MarcarComoTerminadaAsync(id);
-            return TypedResults.Ok(new MensajeResponse("Tarea marcada como completada."));
-        }
-        catch (System.ArgumentException)
-        {
-            return CrearError(context, StatusCodes.Status400BadRequest);
-        }
-        catch (KeyNotFoundException)
-        {
-            return CrearError(context, StatusCodes.Status404NotFound);
-        }
+        await servicio.MarcarComoTerminadaAsync(id);
+        return TypedResults.Ok(new MensajeResponse("Tarea marcada como completada."));
     }
 
-    private static async Task<IResult> ActualizarAsync(
+    private static async Task<Ok<MensajeResponse>> ActualizarAsync(
         [Range(1, int.MaxValue)] int id,
         ActualizarTareaRequest request,
-        HttpContext context,
         TareaService servicio)
     {
-        try
-        {
-            await servicio.ActualizarTareaAsync(id, request.NuevoTitulo, request.NuevaDescripcion);
-            return TypedResults.Ok(new MensajeResponse("Tarea actualizada de forma asíncrona."));
-        }
-        catch (System.ArgumentException)
-        {
-            return CrearError(context, StatusCodes.Status400BadRequest);
-        }
-        catch (KeyNotFoundException)
-        {
-            return CrearError(context, StatusCodes.Status404NotFound);
-        }
+        await servicio.ActualizarTareaAsync(id, request.NuevoTitulo, request.NuevaDescripcion);
+        return TypedResults.Ok(new MensajeResponse("Tarea actualizada de forma asíncrona."));
     }
 
-    private static async Task<IResult> EliminarAsync(
+    private static async Task<Ok<MensajeResponse>> EliminarAsync(
         [Range(1, int.MaxValue)] int id,
-        HttpContext context,
         TareaService servicio)
     {
-        try
-        {
-            await servicio.EliminarTareaAsync(id);
-            return TypedResults.Ok(new MensajeResponse("Tarea eliminada de la API de forma segura."));
-        }
-        catch (System.ArgumentException)
-        {
-            return CrearError(context, StatusCodes.Status400BadRequest);
-        }
-        catch (KeyNotFoundException)
-        {
-            return CrearError(context, StatusCodes.Status404NotFound);
-        }
+        await servicio.EliminarTareaAsync(id);
+        return TypedResults.Ok(new MensajeResponse("Tarea eliminada de la API de forma segura."));
     }
-
-    private static IResult CrearError(HttpContext context, int statusCode) =>
-        Results.Json(
-            new ApiErrorResponse(statusCode, context.TraceIdentifier),
-            statusCode: statusCode);
 }

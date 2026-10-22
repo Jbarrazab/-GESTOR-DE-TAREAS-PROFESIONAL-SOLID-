@@ -50,7 +50,7 @@ public class TareaService
             throw new KeyNotFoundException($"No se encontró la tarea con el ID: {id}");
         }
 
-        tarea.ECompletado = true; 
+        tarea.MarcarComoCompletada();
         await _repository.ActualizarAsync(tarea);
     }
 
@@ -64,13 +64,8 @@ public class TareaService
             throw new KeyNotFoundException($"No se encontró la tarea con el ID: {id}");
         }
 
-        var tituloActualizado = new TituloTarea(nuevoTitulo);
-        var tareaActualizada = new Tarea(tareaExistente.Id, tituloActualizado, nuevaDescripcion, tareaExistente.Responsable)
-        {
-            ECompletado = tareaExistente.ECompletado
-        };
-
-        await _repository.ActualizarAsync(tareaActualizada);
+        tareaExistente.Actualizar(new TituloTarea(nuevoTitulo), nuevaDescripcion);
+        await _repository.ActualizarAsync(tareaExistente);
     }
 
     public async Task EliminarTareaAsync(int id)
@@ -78,6 +73,7 @@ public class TareaService
         if (id <= 0) throw new ArgumentException("El ID debe ser mayor a cero.");
         
         // El repositorio internamente validará si existe antes de borrar
+
         await _repository.EliminarAsync(id);
     }
 }

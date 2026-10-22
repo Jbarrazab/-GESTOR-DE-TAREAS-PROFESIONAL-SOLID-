@@ -6,6 +6,7 @@
 bin/
 obj/
 out/
+graphify-out/
 
 # Visual Studio Code settings
 .vscode/

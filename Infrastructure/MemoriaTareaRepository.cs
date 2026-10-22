@@ -13,7 +13,7 @@ public class MemoriaTareaRepository : ITareaRepository
     public Task GuardarAsync(Tarea tarea)
     {
         int nuevoId = _tareas.Any() ? _tareas.Max(t => t.Id) + 1 : 1;
-        tarea.Id = nuevoId;
+        tarea.AsignarId(nuevoId);
         _tareas.Add(tarea);
         return Task.CompletedTask;
     }
@@ -35,8 +35,10 @@ public class MemoriaTareaRepository : ITareaRepository
         if (index != -1)
         {
             _tareas[index] = tarea;
+            return Task.CompletedTask;
         }
-        return Task.CompletedTask;
+
+        throw new KeyNotFoundException($"No se encontró ninguna tarea con el ID: {tarea.Id} para actualizar.");
     }
 
     public Task EliminarAsync(int id)

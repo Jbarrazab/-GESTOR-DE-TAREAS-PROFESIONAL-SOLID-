@@ -15,3 +15,13 @@ source files when (a) modifying/debugging specific code, (b) the graph lacks the
 (c) the graph is missing or stale.
 
 Type `/graphify` in Copilot Chat to build or update the graph.
+
+## Required Graphify workflow
+
+Before answering a codebase question or changing source code:
+
+1. Refresh the graph from the current working tree with `graphify update .`. Do not rely on an existing graph until this succeeds. On this Windows installation, if `graphify` is not yet on the current process PATH, invoke it with `& "$HOME\.local\bin\graphify.exe" update .`.
+2. Query the refreshed graph first with `graphify query "<question>"`. Use `graphify path "<A>" "<B>"` for relationships or `graphify explain "<concept>"` for one concept. Then inspect source files as needed before proposing or making changes. Use the same full executable path as above if `graphify` is not on PATH.
+3. If the refresh fails, say the graph could not be refreshed; do not present its results as current. Continue with direct source inspection only when needed to complete the task.
+
+After changing source files, run `graphify update .` again so subsequent agent turns see the updated graph (using the full executable path above if needed). Git hooks are a supplement, not a replacement for this workflow: they refresh after commits and branch switches, and may run asynchronously. After pulls or merges, refresh explicitly before querying.

@@ -7,3 +7,5 @@ Cambia a Production de forma nativa: Al no leer el JSON de desarrollo, .NET no e
 
 dotnet run --launch-profile ""
 ============================================================================dotnet run --no-launch-profile -e DOTNET_ENVIRONMENT=Production
+
+uv tool uninstall graphifyy
