@@ -21,12 +21,6 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 bool esGeneracionDeOpenApi = Environment.GetCommandLineArgs().Any(arg => arg.Contains("GetDocument.OpenApi"));
 
 // ==========================================
-// DETECCIÓN DEL ENTORNO DE COMPILACIÓN (OPENAPI)
-// ==========================================
-// Comprobamos si el ensamblado ejecutor es el generador de archivos de OpenAPI de Microsoft
-bool esGeneracionDeOpenApi = Environment.GetCommandLineArgs().Any(arg => arg.Contains("GetDocument.OpenApi"));
-
-// ==========================================
 // 1. REGISTRO DE DEPENDENCIAS (IoC / SOLID - D)
 // ==========================================
 builder.Services.AddScoped<ITareaRepository, JsonTareaRepository>();

@@ -23,9 +23,6 @@
     <!-- La estructura base OpenAPI (versión requerida por ApiDescription sin pisar el paquete de arriba) -->
     <PackageReference Include="Microsoft.OpenApi" Version="2.12.0" />
     
-    <!-- Generador físico de openapi.json en disco -->
-    <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" Version="10.0.12" />
-    
     <!-- Panel interactivo visual -->
     <PackageReference Include="Scalar.AspNetCore" Version="2.0.18" />
 
