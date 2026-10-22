@@ -21,6 +21,12 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 bool esGeneracionDeOpenApi = Environment.GetCommandLineArgs().Any(arg => arg.Contains("GetDocument.OpenApi"));
 
 // ==========================================
+// DETECCIÓN DEL ENTORNO DE COMPILACIÓN (OPENAPI)
+// ==========================================
+// Comprobamos si el ensamblado ejecutor es el generador de archivos de OpenAPI de Microsoft
+bool esGeneracionDeOpenApi = Environment.GetCommandLineArgs().Any(arg => arg.Contains("GetDocument.OpenApi"));
+
+// ==========================================
 // 1. REGISTRO DE DEPENDENCIAS (IoC / SOLID - D)
 // ==========================================
 builder.Services.AddScoped<ITareaRepository, JsonTareaRepository>();
@@ -29,6 +35,13 @@ builder.Services.AddScoped<TareaService>();
 // CLEAN CODE: Registramos el motor nativo de OpenAPI de Microsoft (.NET 10)
 builder.Services.AddOpenApi(); 
 builder.Services.Configure<RouteHandlerOptions>(options => options.ThrowOnBadRequest = true);
+
+// PROTECCIÓN SENIOR: Aquí puedes registrar servicios pesados o externos (Bases de datos, APIs de terceros)
+// para evitar que se ejecuten o pinchen durante el 'dotnet build'.
+if (!esGeneracionDeOpenApi)
+{
+    // Ejemplo futuro: builder.Services.AddDbContext<MiContexto>();
+}
 
 // PROTECCIÓN SENIOR: Aquí puedes registrar servicios pesados o externos (Bases de datos, APIs de terceros)
 // para evitar que se ejecuten o pinchen durante el 'dotnet build'.

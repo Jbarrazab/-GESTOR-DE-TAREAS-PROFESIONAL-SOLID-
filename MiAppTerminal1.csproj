@@ -5,7 +5,6 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-
     <!-- PROPIEDADES DE GENERACIÓN DE OPENAPI EN TIEMPO DE COMPILACIÓN -->
     <OpenApiGenerateDocumentsOnBuild>true</OpenApiGenerateDocumentsOnBuild>
     <OpenApiGenerateDocumentsOptions>--file-name openapi</OpenApiGenerateDocumentsOptions>
@@ -16,6 +15,10 @@
   <ItemGroup>
     <!-- El motor web nativo de .NET 10 RC1 -->
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0-rc.1.25451.107" />
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" Version="10.0.12">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     
     <!-- La estructura base OpenAPI (versión requerida por ApiDescription sin pisar el paquete de arriba) -->
     <PackageReference Include="Microsoft.OpenApi" Version="2.12.0" />
