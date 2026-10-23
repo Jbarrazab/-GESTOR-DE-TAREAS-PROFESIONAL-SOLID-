@@ -1,47 +1,56 @@
 # =====================
-# .NET / C# Essentials
+# .NET / C#
 # =====================
 
-# Build Results
-bin/
-obj/
+# Build and publish outputs
+**/bin/
+**/obj/
 out/
+artifacts/
+publish/
+
+# Test results and coverage
+TestResults/
+**/TestResults/
+coverage/
+coverage.*
+*.coverage
+*.coveragexml
+*.lcov
+
+# SonarQube / SonarScanner
+.sonarqube/
+.scannerwork/
+
+# Graphify generated output
 graphify-out/
+**/graphify-out/
 
-# Visual Studio Code settings
-.vscode/
-
-# NuGet Packages
+# NuGet generated artifacts
 *.nupkg
-**/packages/*
+*.snupkg
+**/packages/
+.nuget/
 
-# NuGet package restore results
-*.dll
-*.pdb
-*.exe
-*.cache
-
-# User-specific files
+# Visual Studio
+.vs/
 *.user
 *.suo
 *.userosscache
 *.sln.docstates
 
-# OS generated files
-.DS_Store
-Thumbs.db
+# Visual Studio Code
+.vscode/
 
-# Log files
-*.log
-
-# Coverlet coverage reports
-coverage/
-coverage.*
-*.lcov
-
-# Rider IDE files (optional, if you use JetBrains Rider alongside)
+# JetBrains Rider
 .idea/
 *.sln.iml
 
-# Rider or VS Code Auto Generated
-.vs/
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# Operating system files
+.DS_Store
+Thumbs.db
