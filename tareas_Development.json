@@ -24,7 +24,7 @@
     "TipoResponsable": "persona",
     "NombreResponsable": "jafit",
     "ApellidoResponsable": "barraza",
-    "EstaCompletado": false
+    "EstaCompletado": true
   },
   {
     "Id": 4,
@@ -55,20 +55,11 @@
   },
   {
     "Id": 7,
-    "Titulo": "Tdesde front",
-    "Descripcion": "qwaefg",
+    "Titulo": "tare esperada 7 actualizada v3",
+    "Descripcion": "test hhhhhhhhhhhhhhh",
     "TipoResponsable": "persona",
-    "NombreResponsable": "eorijg",
-    "ApellidoResponsable": "barraza",
-    "EstaCompletado": false
-  },
-  {
-    "Id": 8,
-    "Titulo": "Tarea control",
-    "Descripcion": "se introducen valores simulados coherentes con el fin de hacer comprobaciones",
-    "TipoResponsable": "persona",
-    "NombreResponsable": "Efrain",
-    "ApellidoResponsable": "cortes",
+    "NombreResponsable": "test nombre",
+    "ApellidoResponsable": "test apellido",
     "EstaCompletado": false
   }
 ]
