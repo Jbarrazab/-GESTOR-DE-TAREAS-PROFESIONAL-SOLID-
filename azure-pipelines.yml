@@ -1,0 +1,173 @@
+# ============================================================
+# PIPELINE CI INICIAL PARA BACKEND .NET 10
+# Archivo: azure-pipelines.yml
+#
+# Objetivo:
+# 1. Descargar el repositorio.
+# 2. Instalar el SDK indicado en global.json.
+# 3. Restaurar las dependencias NuGet.
+# 4. Compilar la solución en modo Release.
+#
+# Actualmente no ejecuta pruebas porque el repositorio
+# todavía no tiene un proyecto de pruebas automatizadas.
+# ============================================================
+
+
+# ------------------------------------------------------------
+# TRIGGER
+# Define qué ramas ejecutan automáticamente este pipeline
+# cuando reciben un push.
+# ------------------------------------------------------------
+trigger:
+
+  # Lista de ramas incluidas.
+  branches:
+    include:
+
+      # Ejecutar al hacer push sobre la rama dev.
+      - dev
+
+      # Ejecutar al hacer push sobre la rama main.
+      - main
+
+
+# ------------------------------------------------------------
+# POOL
+# Define el tipo de máquina que ejecutará el pipeline.
+# Azure DevOps crea temporalmente esta máquina y la elimina
+# cuando termina la ejecución.
+# ------------------------------------------------------------
+pool:
+
+  # Agente Linux administrado por Microsoft.
+  # "latest" selecciona la imagen estable disponible.
+  vmImage: 'ubuntu-latest'
+
+
+# ------------------------------------------------------------
+# VARIABLES
+# Valores reutilizables dentro del pipeline.
+# Se referencian mediante la sintaxis $(nombreVariable).
+# ------------------------------------------------------------
+variables:
+
+  # Configuración utilizada para compilar.
+  # Release activa las optimizaciones destinadas a producción.
+  buildConfiguration: 'Release'
+
+  # Ruta de la solución desde la raíz del repositorio.
+  # Si la solución está dentro de una carpeta, debes cambiarla.
+  solution: 'MiAppTerminal1.slnx'
+
+
+# ------------------------------------------------------------
+# STEPS
+# Lista ordenada de acciones que ejecutará el agente.
+# Si un paso falla, los siguientes no se ejecutan normalmente.
+# ------------------------------------------------------------
+steps:
+
+
+# ------------------------------------------------------------
+# PASO 1: DESCARGAR EL REPOSITORIO
+# ------------------------------------------------------------
+
+# "checkout: self" descarga el mismo repositorio conectado
+# al pipeline.
+- checkout: self
+
+  # Nombre visible de este paso en Azure DevOps.
+  displayName: 'Descargar repositorio'
+
+  # Elimina archivos residuales antes de descargar el código.
+  # Es una medida de consistencia, especialmente útil si luego
+  # utilizas agentes propios o self-hosted.
+  clean: true
+
+
+# ------------------------------------------------------------
+# PASO 2: INSTALAR EL SDK DE .NET
+# ------------------------------------------------------------
+
+# "task" indica que se utilizará una tarea de Azure DevOps.
+# UseDotNet es la tarea oficial para instalar un SDK o runtime.
+# @2 representa la versión 2 de la tarea, no la versión de .NET.
+- task: UseDotNet@2
+
+  # Nombre que se mostrará en la ejecución.
+  displayName: 'Instalar SDK definido en global.json'
+
+  # Parámetros que recibe la tarea UseDotNet@2.
+  inputs:
+
+    # Instala el SDK completo.
+    # El SDK permite restaurar, compilar, probar y publicar.
+    # Un runtime solamente permite ejecutar una aplicación.
+    packageType: 'sdk'
+
+    # Busca el archivo global.json del repositorio y utiliza
+    # la versión de .NET declarada en ese archivo.
+    useGlobalJson: true
+
+    # Carpeta desde donde comenzará a buscar global.json.
+    # Esta variable representa la raíz del repositorio descargado.
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
+
+
+# ------------------------------------------------------------
+# PASO 3: MOSTRAR INFORMACIÓN DEL SDK
+# ------------------------------------------------------------
+
+# "script" ejecuta directamente un comando en la terminal
+# del agente.
+- script: dotnet --info
+
+  # Nombre visible en Azure DevOps.
+  displayName: 'Verificar versión y entorno de .NET'
+
+
+# ------------------------------------------------------------
+# PASO 4: RESTAURAR DEPENDENCIAS
+# ------------------------------------------------------------
+
+# DotNetCoreCLI@2 ejecuta comandos de la CLI de .NET.
+# @2 identifica la versión de la tarea de Azure DevOps.
+- task: DotNetCoreCLI@2
+
+  # Nombre visible del paso.
+  displayName: 'Restaurar dependencias NuGet'
+
+  # Configuración de la tarea.
+  inputs:
+
+    # Equivale al comando:
+    # dotnet restore MiAppTerminal1.slnx
+    command: 'restore'
+
+    # Solución sobre la que se ejecutará el restore.
+    projects: '$(solution)'
+
+
+# ------------------------------------------------------------
+# PASO 5: COMPILAR LA SOLUCIÓN
+# ------------------------------------------------------------
+
+# Se utiliza nuevamente la tarea oficial de .NET.
+- task: DotNetCoreCLI@2
+
+  # Nombre mostrado durante la ejecución.
+  displayName: 'Compilar solución en Release'
+
+  # Parámetros de compilación.
+  inputs:
+
+    # Equivale al comando dotnet build.
+    command: 'build'
+
+    # Solución que se compilará.
+    projects: '$(solution)'
+
+    # Argumentos adicionales enviados a dotnet build.
+    arguments: >
+      --configuration $(buildConfiguration)
+      --no-restore
