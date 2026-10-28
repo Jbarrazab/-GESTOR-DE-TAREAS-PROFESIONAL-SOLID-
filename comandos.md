@@ -9,3 +9,6 @@ dotnet run --launch-profile ""
 ============================================================================dotnet run --no-launch-profile -e DOTNET_ENVIRONMENT=Production
 
 uv tool uninstall graphifyy
+
+git pull azure dev & git push -u azure dev
+
